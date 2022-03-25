@@ -1,0 +1,35 @@
+{% if bidders %}
+{% for b in bidders %}
+<!-- <tr>
+    <td>{{ b.bidder.organization }}</td>
+    <td>-</td>
+    <td>-</td>    
+    <td>
+        {% if b.bidder.user == request.user %}
+            <input type="button" value="Yes">
+        {% endif %}
+    </td>
+    
+</tr> -->
+
+<tr>
+    <div class="row">
+        <td>
+            <div scope="col-6">
+                <h6>{{ b.bidder.organization }}</h6>
+            </div>
+        </td>
+        <td>
+            <div scope="col-4">
+                <h6>{{ b.get_response_time|floatformat:4|default_if_none:'-' }}</h6>
+            </div>
+        </td>
+        <td>
+            <div scope="col-2">
+                <h6>{{ b.rank|default_if_none:'-' }}</h6>
+            </div>
+        </td>
+    </div>
+</tr>
+{% endfor %}
+{% endif %}

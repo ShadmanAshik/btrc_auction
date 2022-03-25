@@ -1,0 +1,49 @@
+{% extends 'auction/base.html' %}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <h1>Entry Page</h1>
+
+    <br>
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-group">
+                                {{ form | crispy }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="action-form">
+                        <div class="form-group mb-0 text-left">
+                            <button type="submit" class="btn btn-info waves-effect waves-light">Save</button>
+                            <a href="#" onclick="javascript:window.history.back(-1);return false;"
+                                class="btn btn-dark waves-effect waves-light">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div>
+                <br>
+                {% for message in messages %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{message}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+            
+        </div>
+    </div>
+{% endblock %}

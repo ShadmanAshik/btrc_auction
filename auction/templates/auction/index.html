@@ -1,0 +1,200 @@
+{% extends 'auction/base.html' %}
+
+
+{% block content %}
+
+    {% if headerText == 'Home' %}
+    <h1>Home Page</h1>
+
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-center">Auction Details</div>
+        <div class="card-body">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <input type="submit" value="Start" class="btn btn-info">
+            </form>
+        </div>
+
+        <br>
+
+        <div class="card-header d-flex justify-content-center">Auction Details</div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <th>Round</th>
+                    <th>Auction Status</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Complete Status</th>
+                </thead>
+                <tbody>
+                    {% for i in rounds %}
+                    <tr>
+                        <td>{{ i.roundName }}</td>
+                        <td>{{ i.actionStatus }}</td>
+                        <td>{{ i.start_time }}</td>
+                        <td>{{ i.end_time }}</td>
+                        <td>{{ i.isComplete }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+
+        <div class="card-header d-flex justify-content-center">Bidder Details</div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <th>Operator</th>
+                    <th>Response Time</th>
+                    <th>Rank</th>
+                    <th>Action</th>
+                </thead>
+                <tbody>
+                    {% for b in bidders %}
+                    <tr>
+                        <td>{{ b.organization }}</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>
+                            
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+
+
+
+
+    {% elif headerText == 'Auction' %}
+    <h1>Auction Page</h1>
+
+    
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-center">Auction Details</div>
+        <div class="card-body">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <input type="submit" value="Start" class="btn btn-info" disabled>
+            </form>
+        </div>
+
+        <br>
+
+        <div class="card-header d-flex justify-content-center">Auction Details</div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <th>Round</th>
+                    <th>Auction Status</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Complete Status</th>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>{{ round.roundName }}</td>
+                        <td>{{ round.actionStatus }}</td>
+                        <td>{{ round.start_time }}</td>
+                        <td>{{ round.end_time }}</td>
+                        <td>{{ round.isComplete }}</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+
+
+        <div id="showtime">Time Left: </div>
+
+        <div class="card-header d-flex justify-content-center">Bidder Details</div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <th>Operator</th>
+                    <th>Response Time</th>
+                    <th>Rank</th>
+                    <th>Action</th>
+                </thead>
+                <tbody>
+                    {% include 'auction/bidding.html' %}
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+
+
+    {% else %}
+
+    {% endif %}
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        var countDownDate = new Date('{{ end_time }}');
+        var countFromDate = new Date('{{ start_time }}');
+
+        var distance = (countDownDate.getTime() - countFromDate.getTime()) / 1000;
+
+        var days = Math.floor((distance / (60 * 60 * 24)));
+        var hours = Math.floor((distance - (days * (60 * 60 * 24))) / (60 * 60));
+        var minutes = Math.floor((distance - ((days * (60 * 60 * 24)) + (hours * (60 * 60)))) / 60);
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+
+        document.getElementById("showtime").innerHTML = days + ' ' + hours + ' ' + minutes + ' ' + seconds;
+
+        // Timer
+        let active = true;
+
+        startTimer = () => {
+            if (active) {
+                var timer = document.getElementById("showtime").innerHTML;
+                let nums = timer.split(" ").map(num => parseInt(num))
+                let day = nums[0];
+                let hour = nums[1];
+                let min = nums[2];
+                let sec = nums[3];
+                if (sec == 0) {
+                    if (min == 0) {
+                        hour--;
+                        min = 59;
+                        if (hour == 0) {
+                            day--;
+                            hour = 23;
+                        }
+                        if (hour < 10) hour = "0" + hour;
+                    } else {
+                        min--;
+                    }
+                    if (min < 10) min = "0" + min;
+                    sec = 59;
+                } else {
+                    sec--;
+                    console.log(sec)
+                    if (sec < 10) sec = "0" + sec;
+                }
+                document.getElementById("showtime").innerHTML = day + ' ' + hour + ' ' + min + ' ' + sec;
+                setTimeout(startTimer, 1000);
+            }
+        }
+        startTimer();
+    </script>
+
+{% endblock %}

@@ -1,0 +1,341 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/owl.theme.default.min.css' %}"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <title>BTRC AUCTION</title>
+  </head>
+  <body>
+    <section class="container" id="main_container">
+      <section>
+        <nav id="navigation">
+          {% if user.groups.all.0.name == 'Bidder' %}
+          <h5 id="screen">Bidder Screen</h5>
+          {% elif user.groups.all.0.name == 'Auctioneer' %}
+          <div class="row" id="block3">
+            <h5 id="home">Home</h5>
+            <button type="button " id="result" class="btn btn-info btn-sm">
+              Auction Result
+            </button>
+          </div>
+          {% endif %}
+          <!-- <div class="container-fluid justify-content-center">
+                    <a class="navbar-brand" href="#"><img src="{% static 'img/all-logo-01.png' %}" alt=""  class="d-inline-block align-text-top" id="img"></a>
+                </div> -->
+          <div class="container-fluid justify-content-center">
+            <a class="navbar-brand" href="#"
+              ><img
+                src="{% static 'img/all-logo-01.png' %}"
+                alt=""
+                class="d-inline-block align-text-top"
+                id="img"
+            /></a>
+          </div>
+
+          <div class="top-right">
+            {% if user.groups.all.0.name == 'Auctioneer' %}
+            <h5 id="auctioneer">BTRC(Auctioneer)</h5>
+            {% elif user.groups.all.0.name == 'Bidder' %}
+            <h5 id="screen">{{ request.user.first_name }}</h5>
+
+            {% endif %}
+            {% if request.user.is_authenticated %}
+            <a class="logout" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            {% endif %}
+          </div>
+        </nav>
+      </section>
+      <br />
+
+      <section class="static" id="static_id">
+        <div class="container" id="container1">
+          <div class="row">
+            <div class="col-7">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title" id="auc_title">
+                    <strong>Auction Details</strong>
+                  </h6>
+                  <hr />
+                  <div class="auction">
+                    <div class="row" id="auction">
+                      <div class="col-6">
+                        <h6>
+                          <b>Spectrum : </b><span> 2.3GHz & 2.6 GHz </span>
+                        </h6>
+                        <h6>
+                          <b>Base Price (USD) :</b><span> 6.00 Milllion </span>
+                        </h6>
+                      </div>
+                      <div class="col-6">
+                        <h6><b>Phase :</b><span> Phase 1 </span></h6>
+                        <h6><b>Number of Blocks :</b><span> 22 </span></h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-5">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title" id="bid_title">
+                    <strong>Now Bidding For</strong>
+                  </h6>
+                  <hr />
+                  <div class="bidding">
+                    <h6>
+                      <b>Bidding Price (USD) : </b><span> 6.25 Milllion </span>
+                    </h6>
+                    <h6><b>Allotted Time :</b><span> 03 Minutes</span></h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr />
+
+      <section class="dynamic" id="dynamic_id">
+        <div class="container" id="container2">
+          <div class="row">
+            <div class="col-6">
+              <div class="card">
+                <div class="card-body">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <div class="row">
+                          <th scope="col-6"><h4>qualified bidders</h4></th>
+                          <th scope="col-4"><h4>response time</h4></th>
+                          <th scope="col-2"><h4>rank</h4></th>
+                        </div>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {% include 'auction/bidding.html' %}
+                    </tbody>
+                  </table>
+
+                  {% if user.groups.all.0.name == 'Auctioneer' %}
+                  <div class="row" id="block3">
+                    {% if rounds %}
+                    <button type="submit " id="end" class="btn btn-danger">
+                      <h4>End Auction</h4>
+                    </button>
+                    {% endif %}
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="card">
+                <div class="card-body">
+                  <div class="container" id="full_block">
+                    <div class="row" id="block">
+                      <div class="col-4">
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-12" id="round_id">
+                                <h4>round #</h4>
+                              </div>
+                              <hr />
+                            </div>
+                            <div class="row">
+                              <div class="col-12" id="round_num">
+                                <h1>{{ rounds.roundName }}</h1>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-8">
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-12 text-center" id="time_id">
+                                <h4>time remaining</h4>
+                              </div>
+                              <hr />
+                            </div>
+                            <div class="row">
+                              <div class="col-12" id="time">
+                                <h1>03:00:000</h1>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {% if user.groups.all.0.name == 'Auctioneer' %}
+                    <div class="row" id="block2">
+                      <form
+                        method="POST"
+                        id="frmStart"
+                        action="{% url 'startRound' %}"
+                      >
+                        {% csrf_token %}
+                        <button
+                          type="submit "
+                          class="btn btn-success"
+                          id="start"
+                          name="btnStart"
+                        >
+                          <h3>Start</h3>
+                        </button>
+                      </form>
+                    </div>
+                    <div class="row" id="block3">
+                      {% if rounds %}
+                      <form
+                        method="POST"
+                        id="frmYes"
+                        action="{% url 'endround' rounds.id %}"
+                      >
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary" id="next">
+                          <h4>Next Round</h4>
+                        </button>
+                      </form>
+                      {% endif %}
+                    </div>
+                    <div class="row">
+                      <br />
+                      {% for message in messages %}
+                      <div
+                        class="alert alert-warning alert-dismissible fade show"
+                        role="alert"
+                      >
+                        {{message}}
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="alert"
+                          aria-label="Close"
+                        >
+                          <!-- <span aria-hidden="true">&times;</span> -->
+                        </button>
+                      </div>
+                      {% endfor %}
+                    </div>
+                    {% elif user.groups.all.0.name == 'Bidder' %}
+                    <div class="row" id="block2">
+                      {% if rounds %}
+                      <form
+                        method="POST"
+                        id="frmYes"
+                        action="{% url 'bidparticipation' rounds.id %}"
+                      >
+                        {% csrf_token %}
+                        <button type="button " class="btn btn-success" id="yes">
+                          <h3>Yes</h3>
+                        </button>
+                      </form>
+                      {% endif %}
+                    </div>
+                    <div class="row">
+                      <br />
+                      {% for message in messages %}
+                      <div
+                        class="alert alert-warning alert-dismissible fade show"
+                        role="alert"
+                      >
+                        {{message}}
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="alert"
+                          aria-label="Close"
+                        >
+                          <!-- <span aria-hidden="true">&times;</span> -->
+                        </button>
+                      </div>
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script href="{% static 'js/app.js' %}"></script> -->
+
+    <script>
+      // let countDownDate = new Date("March 24, 2022 11:04:25").getTime();
+      //added 360 as 60 mins and 60000 for 1000ms for a second
+      var end_time = new Date("{{ end_time }}").getTime() + 360 * 60000;
+        let button=document.getElementById("start");
+        let start_time=new Date("{{ end_time }}").getTime() + 360 * 60000;
+        // let action=true;
+        // action="{{actionStatus}}";
+        // // action=true;
+        // console.log(action);
+      let curTime = new Date().getTime() + (360 * 60000 + 3 * 6000);
+      let x = setInterval(function () {
+        // Get today's date and time
+        let now = new Date().getTime();
+        
+
+        // Find the distance between now and the count down date
+        let distance = end_time - now;
+        
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        var ms = Math.floor(distance % 1000);
+        // Output the result in an element with id="time"
+        if(ms<100){
+            ms="0"+ms;
+            if(ms<10){
+                ms="0"+ms;
+            }
+        }
+        document.getElementById("time").innerHTML =
+          minutes + " : " + seconds + " : " + ms;
+
+        // If the count down is over, write some text
+        if (distance < 0) {
+          clearInterval(x);
+          document.getElementById("time").innerHTML = "EXPIRED";
+        }
+      }, 10);
+    </script>
+  </body>
+</html>
